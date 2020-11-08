@@ -16,6 +16,7 @@ This is a box for the WeAct-TC MiniSTM32H7xx board.
 Notes about the WeAct-TC MiniSTM32H7xx camera hardware I'm using with OpenMV.
 
 - [camera](https://www.aliexpress.com/item/1005001475058305.html) with lcd screen. Runs micropython.
+- Installation [manual](https://github.com/WeActTC/MiniSTM32H7xx)
 - How to [install the lcd](https://m.bilibili.com/video/av286164536)
 - camera [firmware](https://gitee.com/WeAct-TC/MiniSTM32H7xx/tree/master/SDK/openmv/Firmwares/)
 - [tool](https://gitee.com/WeAct-TC/MiniSTM32H7xx/tree/master/Soft) to upload firmware to the camera
