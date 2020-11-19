@@ -2,13 +2,12 @@
  * Box for WeAct-TC Mini-STM32H7xx.
  */
 
-
 eps1=0.001;
 eps2=2*eps1;
 infinity=100;
 inch=25.4;
 
-top_z=4.2;    // top components
+top_z=3.6;    // top components
 bottom_z=6.2; // bottom components
 pcb_z=1.6;    // pcb
 
@@ -24,6 +23,18 @@ r1=d1/2; // distance screw center to pcb edge
 cam_x=14.5;
 cam_y=79.0;
 cam_d=8.0;
+
+/* buttons */
+button_y = 62.0;
+button_x1 = 11.9;
+button_x2 = 16.1;
+button_x3 = 20.2;
+button_w = 2.0;
+button_h = 3.0;
+button_z = 2.0;
+button_l = 13.6;
+
+led_z = top_z - 1.0;
 
 clearance_fit=0.4;
 
@@ -73,16 +84,34 @@ module small_text(txt) {
 // --------------------------------------------------------------------------------
 // Imports from cad
 
-module led1() {
-    hole()
+module led1_hole() {
+    translate([0,0,-infinity/2])
+    linear_extrude(infinity)
     translate([31.2, 10.3])
-    cube([0.8,1.6, eps1], center=true);
+    square([0.8,1.6], center=true);
 }
 
-module led2() {
-    hole()
+module led2_hole() {
+    translate([0,0,-infinity/2])
+    linear_extrude(infinity)
     translate([8.0, 62.1])
-    cube([1.6,0.8,eps1], center=true);
+    square([1.6,0.8], center=true);
+}
+
+module led1_body() {
+    translate([0,0,-wall_thickness-led_z])
+    linear_extrude(led_z)
+    offset(2*nozzle_size)
+    translate([31.2, 10.3])
+    square([0.8,1.6], center=true);
+}
+
+module led2_body() {
+    translate([0,0,-wall_thickness-led_z])
+    linear_extrude(led_z)
+    offset(2*nozzle_size)
+    translate([8.0, 62.1])
+    square([1.6,0.8], center=true);
 }
 
 module lcd() {
@@ -91,7 +120,46 @@ module lcd() {
     cube([23.7,12.8,eps1]);
 }
 
-module buttons() {
+module button_body() {
+    translate([0,0,-button_z/2]) {
+        translate([button_x3, button_y,0])
+        cube([button_w, button_h, button_z], center=true);
+        
+        translate([button_x2, button_y,0])
+        cube([button_w, button_h, button_z], center=true);
+        
+        translate([button_x1, button_y,0])
+        cube([button_w, button_h, button_z], center=true);
+    }
+}
+        
+module button_holes() {
+    x1 = button_x1 - button_w/2 - clearance_fit; // first
+    x4 = button_x3 + button_w/2 + clearance_fit; // last
+    x2 = x1 + (x4-x1)/3;
+    x3 = x4 - (x4-x1)/3;
+    y0 = button_y-button_h/2+button_l/2-clearance_fit;
+    z0 = 2*wall_thickness+eps1;
+    
+    translate([x1, y0, 0])
+    cube([clearance_fit, button_l, z0], center=true);
+    
+    translate([x2, y0, 0])
+    cube([clearance_fit, button_l, z0], center=true);
+    
+    translate([x3, y0, 0])
+    cube([clearance_fit, button_l, z0], center=true);
+    
+    translate([x4, y0, 0])
+    cube([clearance_fit, button_l, z0], center=true);
+    
+    translate([(x1+x4)/2, button_y-button_h/2-clearance_fit/2, 0])
+    cube([x4-x1+clearance_fit, clearance_fit, z0], center=true);
+    
+    translate([x1-clearance_fit/2, button_y+button_h/2, -2*wall_thickness])
+    cube([x4-x1+clearance_fit, button_l-button_h-clearance_fit, wall_thickness]);
+    
+    if (0)
     hole()
     import("buttons.stl");
 }
@@ -104,7 +172,7 @@ module usb() {
 
 module microsd() {
     contour()
-    translate([7.2,0,1.27])
+    translate([7.2,0,0])
     cube([14.1,15.2,1.9]);
 }
 
@@ -141,15 +209,17 @@ module top_body() {
     bottom_box();
     top_pcb_support();
     camera_support();
+    led1_body();
+    led2_body();
+    button_body();
 }
 
 module top_holes() {
-    led1();
-    led2();
-    buttons();
+    led1_hole();
+    led2_hole();
+    button_holes();
     lcd();
-    mirror([0,0,1])
-    translate([0,-5.0,2.2])
+    translate([0,-5.0,-wall_thickness-top_z])
     {
         usb();
         microsd();
@@ -235,8 +305,18 @@ module bottom_camera_support() {
 }
 
 module bottom_pcb_support() {
-    screw_positions()
-    cylinder(d=d1, h=wall_thickness+bottom_z);
+    cyl_z = wall_thickness+bottom_z;
+
+    difference() {
+        screw_positions()
+        cylinder(d=d1,h=cyl_z);
+        translate([w1/2, h1/2, 0]) {
+            right_groove();
+            rotate([180,180,0]) right_groove();
+            front_groove();
+            rotate([180,180,0])  front_groove();
+        }
+    }
 }
 
 module text_label() {
@@ -311,10 +391,10 @@ module printer_ready() {
 }
 
 module assembly() {
-    rotate([90,0,0]) {
+rotate([90,0,0]) {
         if (1)
-        %translate([0,0,wall_thickness+bottom_z+pcb_z+top_z+wall_thickness])
-        render()
+        translate([0,0,wall_thickness+bottom_z+pcb_z+top_z+wall_thickness])
+        %render()
         top();
         
         if (1)
@@ -322,8 +402,8 @@ module assembly() {
         bottom();
         
         if (1)
-        translate([0,0,wall_thickness+bottom_z])
-        color("Green") {
+        color("Green") 
+        translate([0,0,wall_thickness+bottom_z]) {
             if (1) {
                 pcb_3d();
             } else {
@@ -338,6 +418,5 @@ module assembly() {
 //rotate([0,180,0]) top();
 //printer_ready();
 assembly();
-
 
 // not truncated 

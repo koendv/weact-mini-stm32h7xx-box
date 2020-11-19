@@ -1,1 +1,0 @@
-This box closes using 4 self-tapping M3 screws.

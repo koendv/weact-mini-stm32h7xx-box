@@ -40,7 +40,7 @@ module bottom_box () {
         linear_extrude(z-wall_thickness){
             minkowski(){
                 square([x-radius*2,y-radius*2], center=true);
-                circle(radius, center=true);
+                circle(radius);
             }
         }
         
@@ -64,7 +64,7 @@ module left_hook () {
     translate([(x-2*wall_thickness)/2,-y/2+radius*2,z-wall_thickness]) rotate([0,90,90]) {
         difference(){
             linear_extrude(y-2*radius*2){
-    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]], center=true);
+    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]]);
         }
              translate([hook_thickness, hook_thickness, 0]) rotate([45,0,0]) cube(2*hook_thickness, center=true);
              translate([hook_thickness, hook_thickness, y-2*radius*2]) rotate([45,0,0]) cube(2*hook_thickness, center=true);        
@@ -77,7 +77,7 @@ module front_hook () {
     translate([(-x+4*radius)/2,-y/2+wall_thickness,z-wall_thickness]) rotate([90,90,90]) {
         difference(){
         linear_extrude(x-2*radius*2){
-    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]], center=true);
+    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]]);
     }
              translate([hook_thickness, hook_thickness, 0]) rotate([45,0,0]) cube(2*hook_thickness, center=true);
              translate([hook_thickness, hook_thickness, x-2*radius*2]) rotate([45,0,0]) cube(2*hook_thickness, center=true);
@@ -86,16 +86,16 @@ module front_hook () {
 }
 
 
-module right_grove () {
+module right_groove () {
     translate([-tolerance/2+(x-2*wall_thickness)/2,-y/2+radius,wall_thickness+hook_thickness*2]) rotate([0,90,90]) linear_extrude(y-2*radius){
-    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]], center=true);
+    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]]);
     }
 }
 
 
-module front_grove () {
+module front_groove () {
     translate([(-x+2*radius)/2,-y/2+wall_thickness+tolerance/2,wall_thickness+hook_thickness*2]) rotate([90,90,90]) linear_extrude(x-2*radius){
-    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]], center=true);
+    polygon(points=[[0,0],[2*hook_thickness,0],[hook_thickness,hook_thickness]]);
     }
 }
 
@@ -105,7 +105,7 @@ module top_cover () {
     linear_extrude(wall_thickness){
         minkowski(){
             square([x-radius*2,y-radius*2], center=true);
-            circle(radius, center=true);
+            circle(radius);
         }
     }
     
@@ -114,7 +114,7 @@ module top_cover () {
         linear_extrude(wall_thickness+hook_thickness*2){
             minkowski(){
                 square([x-radius*2-wall_thickness*2-tolerance+wall_thickness*2,y-radius*2-wall_thickness*2-tolerance+wall_thickness*2], center=true);
-                circle(radius-wall_thickness, center=true);
+                circle(radius-wall_thickness);
             }
         }
         
@@ -127,10 +127,10 @@ module top_cover () {
             circle(radius-wall_thickness-top_cover_wall_thickness);
             }
         }
-    right_grove();
-    rotate([180,180,0]) right_grove();
-    front_grove();
-    rotate([180,180,0])  front_grove();
+    right_groove();
+    rotate([180,180,0]) right_groove();
+    front_groove();
+    rotate([180,180,0])  front_groove();
     }
   
 
