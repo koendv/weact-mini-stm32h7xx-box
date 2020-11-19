@@ -34,7 +34,7 @@ button_h = 3.0;
 button_z = 2.0;
 button_l = 13.6;
 
-led_z = top_z - 1.0;
+led_z = top_z - 1.6;
 
 clearance_fit=0.4;
 
