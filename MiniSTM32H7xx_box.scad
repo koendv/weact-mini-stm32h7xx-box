@@ -8,7 +8,7 @@ eps2=2*eps1;
 infinity=100;
 inch=25.4;
 
-top_z=6.0;    // top components
+top_z=4.2;    // top components
 bottom_z=6.2; // bottom components
 pcb_z=1.6;    // pcb
 
@@ -39,22 +39,16 @@ module hole(){
 }
 
 /* convert 3d object to 3d-printable hole */
+
 module contour() {
-    intersection() {    
-        rotate([-90,0,0])
-        linear_extrude(infinity)
-        offset(clearance_fit)
-        hull()
-        projection()
-        rotate([90,0,0])
-        children();
-    
-        linear_extrude(infinity)
-        offset(clearance_fit)
-        hull()
-        projection()
-        children();
-    }
+    rotate([-90,0,0])
+    linear_extrude(9)
+    offset(clearance_fit)
+    hull()
+    projection(cut = true)
+    rotate([90,0,0])
+    translate([0,-1,0])
+    children();
 }
 
 /* pcb screw centers */
@@ -81,36 +75,37 @@ module small_text(txt) {
 
 module led1() {
     hole()
-    import("led1.stl");
+    translate([31.2, 10.3])
+    cube([0.8,1.6, eps1], center=true);
 }
 
 module led2() {
     hole()
-    import("led2.stl");
+    translate([8.0, 62.1])
+    cube([1.6,0.8,eps1], center=true);
 }
 
 module lcd() {
-    translate([6.5,44,0]) {
-        hole()
-        cube([23.7,12.8,1]);
-    }
+    hole()
+    translate([6.5,44,0])
+    cube([23.7,12.8,eps1]);
 }
 
 module buttons() {
     hole()
-    hull()
     import("buttons.stl");
 }
 
 module usb() {
     contour()
+    translate([0,0,-0.1])
     import("usb.stl");
 }
 
 module microsd() {
     contour()
-    translate([0,0,pcb_z/2])
-    import("microsd.stl");
+    translate([7.2,0,1.27])
+    cube([14.1,15.2,1.9]);
 }
 
 module pcb_3d() {
@@ -143,9 +138,9 @@ module top() {
 module top_body() {
     translate([w1/2, h1/2, 0])
     rotate([0,180,0])
-    top_cover();
-    camera_support();
+    bottom_box();
     top_pcb_support();
+    camera_support();
 }
 
 module top_holes() {
@@ -153,6 +148,12 @@ module top_holes() {
     led2();
     buttons();
     lcd();
+    mirror([0,0,1])
+    translate([0,-5.0,2.2])
+    {
+        usb();
+        microsd();
+    }
 }
 
 module camera_support() {
@@ -162,33 +163,27 @@ module camera_support() {
 }
 
 module top_pcb_support() {
-    module top_buttress() {
-       hull() { 
-        translate([0,0,-support_z])
-        cube([support_x, support_x, eps1]);
-        cube([support_z, support_x, eps1]);
-        }
+    mirror([0,0,1])
+    difference() {
+        linear_extrude(wall_thickness+top_z+pcb_z)
+        offset(wall_thickness)
+        pcb();
+        translate([0,0,wall_thickness+top_z])
+        linear_extrude(infinity)
+        offset(tolerance)
+        pcb();
+        translate([0,0,wall_thickness])
+        linear_extrude(infinity)
+        offset(-wall_thickness)
+        pcb();
     }
-    support_x=0.1*inch;
-    support_y=22*0.1*inch;
-    support_z=wall_thickness+top_z;
-    translate([w2-r1,h2/2,-support_z/2])
-    cube([support_x,support_y,support_z], center=true);
-    translate([r1,h2/2,-support_z/2])
-    cube([support_x,support_y,support_z], center=true);
-    translate([r1/2,h2/2+0.2*inch,0])
-    top_buttress();
-    translate([w2-r1/2,h2/2+0.2*inch,0])
-    mirror([1,0,0])
-    top_buttress();
-    translate([r1/2,h2/2-0.6*inch,0])
-    top_buttress();
-    translate([w2-r1/2,h2/2-0.6*inch,0])
-    mirror([1,0,0])
-    top_buttress();
 }
 
-
+module pcb() {
+    hull()
+    screw_positions()
+    circle(d=d1);
+}
 
 // --------------------------------------------------------------------------------
 // box bottom
@@ -202,17 +197,13 @@ module bottom() {
 
 module bottom_body() {
     translate([w1/2, h1/2, 0])
-    bottom_box();
+    top_cover();
     bottom_pcb_support();
     bottom_camera_support();
     bidi();
 }
 
 module bottom_holes() {
-    translate([0,-5.0,wall_thickness+bottom_z+pcb_z]){
-        usb();
-        microsd();
-    }
     camera_hole();
     camera_cable();
     text_label();
@@ -244,25 +235,8 @@ module bottom_camera_support() {
 }
 
 module bottom_pcb_support() {
-    difference() {
-        linear_extrude(wall_thickness+bottom_z+pcb_z)
-        offset(wall_thickness)
-        pcb();
-        translate([0,0,wall_thickness+bottom_z])
-        linear_extrude(infinity)
-        offset(tolerance)
-        pcb();
-        translate([0,0,wall_thickness])
-        linear_extrude(infinity)
-        offset(-wall_thickness)
-        pcb();
-    }
-}
-
-module pcb() {
-    hull()
     screw_positions()
-    circle(d=d1);
+    cylinder(d=d1, h=wall_thickness+bottom_z);
 }
 
 module text_label() {
@@ -349,14 +323,21 @@ module assembly() {
         
         if (1)
         translate([0,0,wall_thickness+bottom_z])
-        color("Green")
-        pcb_3d();
+        color("Green") {
+            if (1) {
+                pcb_3d();
+            } else {
+                linear_extrude(pcb_z)
+                pcb();
+            }
+        }
     }
 }
 
 //bottom();
 //rotate([0,180,0]) top();
-printer_ready();
-//assembly();
+//printer_ready();
+assembly();
+
 
 // not truncated 
