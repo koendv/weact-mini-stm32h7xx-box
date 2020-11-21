@@ -34,7 +34,7 @@ button_h = 3.0;
 button_z = 2.0;
 button_l = 13.6;
 
-led_z = top_z - 1.6;
+led_z = 1.2; // top_z - 1.6;
 
 clearance_fit=0.4;
 
@@ -88,6 +88,7 @@ module led1_hole() {
     translate([0,0,-infinity/2])
     linear_extrude(infinity)
     translate([31.2, 10.3])
+    offset(nozzle_size)
     square([0.8,1.6], center=true);
 }
 
@@ -95,13 +96,15 @@ module led2_hole() {
     translate([0,0,-infinity/2])
     linear_extrude(infinity)
     translate([8.0, 62.1])
-    square([1.6,0.8], center=true);
+    offset(nozzle_size)
+    translate([-0.8,-0.4,0])
+    square([2.4,0.8]); // avoid thin wall
 }
 
 module led1_body() {
     translate([0,0,-wall_thickness-led_z])
     linear_extrude(led_z)
-    offset(2*nozzle_size)
+    offset(3*nozzle_size)
     translate([31.2, 10.3])
     square([0.8,1.6], center=true);
 }
@@ -109,7 +112,7 @@ module led1_body() {
 module led2_body() {
     translate([0,0,-wall_thickness-led_z])
     linear_extrude(led_z)
-    offset(2*nozzle_size)
+    offset(3*nozzle_size)
     translate([8.0, 62.1])
     square([1.6,0.8], center=true);
 }
@@ -134,12 +137,13 @@ module button_body() {
 }
         
 module button_holes() {
-    x1 = button_x1 - button_w/2 - clearance_fit; // first
-    x4 = button_x3 + button_w/2 + clearance_fit; // last
-    x2 = x1 + (x4-x1)/3;
-    x3 = x4 - (x4-x1)/3;
+    d = (button_x2 - button_x1)/2;
+    x1 = button_x1 - d; // first
+    x2 = button_x1 + d;
+    x3 = button_x2 + d;
+    x4 = button_x3 + d; // last
     y0 = button_y-button_h/2+button_l/2-clearance_fit;
-    z0 = 2*wall_thickness+eps1;
+    z0 = 4*wall_thickness+eps1;
     
     translate([x1, y0, 0])
     cube([clearance_fit, button_l, z0], center=true);
