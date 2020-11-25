@@ -15,7 +15,7 @@ number_of_walls = 3; // [1:5]
 tolerance = 0.2; // [0.1:0.1:0.4]
 
 // Outer x dimension in mm
-x=w1+2*number_of_walls*nozzle_size+2*nozzle_size;
+x=w1+2*number_of_walls*nozzle_size+2*nozzle_size+5.2;
 
 // Outer y dimension in mm
 y=h1+2*number_of_walls*nozzle_size+2*nozzle_size;

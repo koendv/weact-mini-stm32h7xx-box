@@ -1,6 +1,9 @@
 /*
- * Box for WeAct-TC Mini-STM32H7xx.
+ * Box for WeAct-TC Mini-STM32H7xx openmv board
+ * and gy-530 vl53l0x laser ranging sensor.
  */
+
+connector = false; // hole for dupont connector?
 
 eps1=0.001;
 eps2=2*eps1;
@@ -12,7 +15,7 @@ bottom_z=6.2; // bottom components
 pcb_z=1.6;    // pcb
 
 w1=40.64;
-h1=86.0;
+h1=87.0;
 w2=w1;
 h2=66.88;
 z1=top_z+pcb_z+bottom_z;
@@ -35,6 +38,10 @@ button_z = 2.0;
 button_l = 13.6;
 
 led_z = 1.2; // top_z - 1.6;
+
+distance_sensor_x = 32.0;
+distance_sensor_y = 79.0;
+distance_sensor_z = 1.2-eps1;
 
 clearance_fit=0.4;
 
@@ -117,6 +124,99 @@ module led2_body() {
     square([1.6,0.8], center=true);
 }
 
+module distance_sensor() {
+    // 3d model of gy-530 module, center of vl53l0x at [0,0,0]
+    translate([-3.2,64.6,-3.7])
+    import("GY-530.stl");
+}
+
+module distance_sensor_hole() {
+    translate([distance_sensor_x,distance_sensor_y,distance_sensor_z])
+    rotate([0,0,180])
+    {
+        // vl53l0x sensor
+        translate([0,0,-wall_thickness/2])
+        linear_extrude(wall_thickness*2)
+        offset(nozzle_size)
+        square([2.4,4.4],center=true);
+
+        // cone cutout
+        translate([0,0,-wall_thickness])
+        hull() {
+            translate([0,0,wall_thickness])
+            linear_extrude(eps1)
+            offset(nozzle_size)
+            square([2.4,4.4],center=true);
+            translate([0,0,-eps2])
+            linear_extrude(eps2)
+            offset(nozzle_size+wall_thickness)
+            square([2.4,4.4],center=true);
+            }
+
+        // small cap
+        translate([0.9,3.3,0.6])
+        linear_extrude(0.6+eps1)
+        offset(nozzle_size)
+        square([0.6,1.0],center=true);
+
+        // pins
+        translate([-3.1,-0.6,1.1+eps1])
+        hull() {
+            linear_extrude(eps1)
+            offset(nozzle_size)
+            square([1.2,0.15*inch],center=true);
+            translate([0,0,-1.2])
+            linear_extrude(eps1)
+            offset(nozzle_size)
+            square([eps1,0.1*inch],center=true);
+        }
+
+        translate([7.3,1.8,1.1+eps1])
+        hull() {
+            linear_extrude(eps1)
+            offset(nozzle_size)
+            square([1.2,0.35*inch],center=true);
+            translate([0,0,-1.2])
+            linear_extrude(eps1)
+            offset(nozzle_size)
+            square([eps1,0.3*inch],center=true);
+        }
+    }
+}
+
+module distance_sensor_body() {
+    translate([distance_sensor_x,distance_sensor_y,distance_sensor_z])
+    rotate([0,0,180])
+    {
+        translate([-1.6,4.6,1.1])
+        rotate([0,0,180/8])
+        cylinder(d=3.2, h=1.2, $fn=8);
+
+        translate([2.1,1.9,1.1]) {
+            translate([0,0,-1.1])
+            linear_extrude(1.1+eps1)
+            offset(wall_thickness + nozzle_size)
+            square([13.0,10.6], center = true);
+            linear_extrude(1.6+eps1)
+            difference() {
+                offset(wall_thickness + nozzle_size)
+                square([13.0,10.6], center = true);
+                offset(nozzle_size)
+                square([13.0,10.6], center = true);
+            }
+        }
+    }
+}
+
+module distance_sensor_support() {
+    translate([distance_sensor_x,distance_sensor_y,0])
+    rotate([0,0,180])
+    translate([-1.6,4.6,0])
+    mirror([0,0,1])
+    rotate([0,0,180/8])
+    cylinder(d=5.2,h=wall_thickness+top_z+pcb_z+bottom_z+pcb_z+wall_thickness-distance_sensor_z-4.3,$fn=8);
+}
+
 module lcd() {
     hole()
     translate([6.5,44,0])
@@ -127,15 +227,15 @@ module button_body() {
     translate([0,0,-button_z/2]) {
         translate([button_x3, button_y,0])
         cube([button_w, button_h, button_z], center=true);
-        
+
         translate([button_x2, button_y,0])
         cube([button_w, button_h, button_z], center=true);
-        
+
         translate([button_x1, button_y,0])
         cube([button_w, button_h, button_z], center=true);
     }
 }
-        
+
 module button_holes() {
     d = (button_x2 - button_x1)/2;
     x1 = button_x1 - d; // first
@@ -144,25 +244,25 @@ module button_holes() {
     x4 = button_x3 + d; // last
     y0 = button_y-button_h/2+button_l/2-clearance_fit;
     z0 = 4*wall_thickness+eps1;
-    
+
     translate([x1, y0, 0])
     cube([clearance_fit, button_l, z0], center=true);
-    
+
     translate([x2, y0, 0])
     cube([clearance_fit, button_l, z0], center=true);
-    
+
     translate([x3, y0, 0])
     cube([clearance_fit, button_l, z0], center=true);
-    
+
     translate([x4, y0, 0])
     cube([clearance_fit, button_l, z0], center=true);
-    
+
     translate([(x1+x4)/2, button_y-button_h/2-clearance_fit/2, 0])
     cube([x4-x1+clearance_fit, clearance_fit, z0], center=true);
-    
+
     translate([x1-clearance_fit/2, button_y+button_h/2, -2*wall_thickness])
     cube([x4-x1+clearance_fit, button_l-button_h-clearance_fit, wall_thickness]);
-    
+
     if (0)
     hole()
     import("buttons.stl");
@@ -197,6 +297,13 @@ module camera() {
     }
 }
 
+module connector_hole() {
+    translate([r1,h2/2,wall_thickness/2])
+    cube([0.2*inch,2.2*inch+clearance_fit,2*wall_thickness],center=true);
+    translate([w1-r1,h2/2,wall_thickness/2])
+    cube([0.2*inch,2.2*inch+clearance_fit,2*wall_thickness],center=true);
+}
+
 // --------------------------------------------------------------------------------
 // box top cover
 
@@ -213,6 +320,7 @@ module top_body() {
     bottom_box();
     top_pcb_support();
     camera_support();
+    distance_sensor_support();
     led1_body();
     led2_body();
     button_body();
@@ -274,12 +382,15 @@ module bottom_body() {
     top_cover();
     bottom_pcb_support();
     bottom_camera_support();
+    distance_sensor_body();
     bidi();
 }
 
 module bottom_holes() {
     camera_hole();
     camera_cable();
+    if (connector) connector_hole();
+    distance_sensor_hole();
     text_label();
 }
 
@@ -305,7 +416,7 @@ module bottom_camera_support() {
         square(cam_d, center = true);
         offset(tolerance)
         square(cam_d, center=true);
-    }     
+    }
 }
 
 module bottom_pcb_support() {
@@ -387,7 +498,7 @@ module qr_render(data, module_size = 1, height = 1) {
 // output
 
 module printer_ready() {
-    translate([-10,0,0])
+    translate([-20,0,0])
     rotate([0,180,0])
     top();
     	
@@ -400,13 +511,13 @@ rotate([90,0,0]) {
         translate([0,0,wall_thickness+bottom_z+pcb_z+top_z+wall_thickness])
         %render()
         top();
-        
+
         if (1)
         %render()
         bottom();
-        
+
         if (1)
-        color("Green") 
+        color("Green")
         translate([0,0,wall_thickness+bottom_z]) {
             if (1) {
                 pcb_3d();
@@ -415,6 +526,12 @@ rotate([90,0,0]) {
                 pcb();
             }
         }
+
+        if (1)
+        color("Purple")
+        translate([distance_sensor_x,distance_sensor_y,distance_sensor_z])
+        rotate([180,0,180])
+        distance_sensor();
     }
 }
 
@@ -423,4 +540,4 @@ rotate([90,0,0]) {
 //printer_ready();
 assembly();
 
-// not truncated 
+// not truncated
