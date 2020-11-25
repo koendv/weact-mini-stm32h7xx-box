@@ -23,6 +23,7 @@ Notes about the WeAct-TC MiniSTM32H7xx camera hardware I'm using with OpenMV.
 - camera [firmware](https://gitee.com/WeAct-TC/MiniSTM32H7xx/tree/master/SDK/openmv/Firmwares/)
 - [tool](https://gitee.com/WeAct-TC/MiniSTM32H7xx/tree/master/Soft) to upload firmware to the camera
 - [openmv ide](https://github.com/koendv/openmv-ide-raspberrypi) for raspberry pi
+- [VL53L0X](https://github.com/ramithuh/OpenMV-VL53L0X) laser distance sensor to check whether there is something in front of the camera
 
 ## OpenSCAD notes
 
