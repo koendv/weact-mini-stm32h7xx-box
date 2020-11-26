@@ -184,7 +184,7 @@ module distance_sensor_hole() {
     }
     
     // hole for cable from sensor to processor 
-    translate([distance_sensor_x-4,h2,wall_thickness+bottom_z+eps2])
+    translate([distance_sensor_x-2.5,h2,wall_thickness+bottom_z+eps2])
     cube([0.2*inch,10.0,2*pcb_z],center=true);
 }
 
@@ -332,6 +332,16 @@ module connector_hole() {
     cube([0.2*inch,2.2*inch+clearance_fit,2*conn_h],center=true);
 }
 
+module connector_body() {
+    linear_extrude(2*wall_thickness)
+    offset(wall_thickness) {
+        translate([r1,h2/2,wall_thickness/2])
+        square([0.2*inch,2.2*inch+clearance_fit],center=true);
+        translate([w1-r1,h2/2,wall_thickness/2])
+        square([0.2*inch,2.2*inch+clearance_fit],center=true);
+    }
+}
+
 // --------------------------------------------------------------------------------
 // box top cover
 
@@ -407,6 +417,7 @@ module bottom_body() {
     bottom_camera_support();
     distance_sensor_body();
     bidi();
+    if (connector) connector_body();
 }
 
 module bottom_holes() {
