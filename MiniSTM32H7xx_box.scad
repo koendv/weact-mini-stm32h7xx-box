@@ -326,19 +326,23 @@ module camera() {
 // hole for DuPont connectors
 module connector_hole() {
     conn_h = wall_thickness+bottom_z+eps2;
-    translate([r1,h2/2,wall_thickness/2])
-    cube([0.2*inch,2.2*inch+clearance_fit,2*conn_h],center=true);
-    translate([w1-r1,h2/2,wall_thickness/2])
-    cube([0.2*inch,2.2*inch+clearance_fit,2*conn_h],center=true);
+    translate([0,0,-conn_h])
+    linear_extrude(2*conn_h)
+    offset(nozzle_size) {
+        translate([r1,h2/2,0])
+        square([0.2*inch,2.2*inch],center=true);
+        translate([w1-r1,h2/2,0])
+        square([0.2*inch,2.2*inch],center=true);
+    };
 }
 
 module connector_body() {
     linear_extrude(2*wall_thickness)
-    offset(wall_thickness) {
+    offset(wall_thickness+nozzle_size) {
         translate([r1,h2/2,wall_thickness/2])
-        square([0.2*inch,2.2*inch+clearance_fit],center=true);
+        square([0.2*inch,2.2*inch],center=true);
         translate([w1-r1,h2/2,wall_thickness/2])
-        square([0.2*inch,2.2*inch+clearance_fit],center=true);
+        square([0.2*inch,2.2*inch],center=true);
     }
 }
 
