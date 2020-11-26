@@ -3,19 +3,19 @@
  * and gy-530 vl53l0x laser ranging sensor.
  */
 
-connector = false; // hole for dupont connector?
+connector = false; //hole for dupont connectors
 
 eps1=0.001;
 eps2=2*eps1;
 infinity=100;
 inch=25.4;
 
-top_z=3.6;    // top components
+top_z=6.0;    // top components
 bottom_z=6.2; // bottom components
 pcb_z=1.6;    // pcb
 
 w1=40.64;
-h1=87.0;
+h1=85.0;
 w2=w1;
 h2=66.88;
 z1=top_z+pcb_z+bottom_z;
@@ -33,11 +33,11 @@ button_x1 = 11.9;
 button_x2 = 16.1;
 button_x3 = 20.2;
 button_w = 2.0;
-button_h = 3.0;
-button_z = 2.0;
+button_h = 5.0;
+button_z = top_z-1.3;
 button_l = 13.6;
 
-led_z = 1.2; // top_z - 1.6;
+led_z = top_z - 1.6;
 
 distance_sensor_x = 32.0;
 distance_sensor_y = 79.0;
@@ -85,7 +85,7 @@ module screw_positions() {
 module small_text(txt) {
     text_h=nozzle_size; // one layer
     translate([0,0,-text_h+eps1])
-    linear_extrude(2*text_h) text(txt, size = 6, halign = "center", valign = "center");
+    linear_extrude(2*text_h) text(txt, size = 6, halign = "center", valign = "center",font="Lato:style=Regular");
 }
 
 // --------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ module led2_hole() {
     translate([8.0, 62.1])
     offset(nozzle_size)
     translate([-0.8,-0.4,0])
-    square([2.4,0.8]); // avoid thin wall
+    square([1.6,0.8]); // gives thin wall
 }
 
 module led1_body() {
@@ -209,12 +209,26 @@ module distance_sensor_body() {
 }
 
 module distance_sensor_support() {
+    support_h=wall_thickness+top_z+pcb_z+bottom_z+pcb_z+wall_thickness-distance_sensor_z-4.3;
     translate([distance_sensor_x,distance_sensor_y,0])
     rotate([0,0,180])
     translate([-1.6,4.6,0])
-    mirror([0,0,1])
-    rotate([0,0,180/8])
-    cylinder(d=5.2,h=wall_thickness+top_z+pcb_z+bottom_z+pcb_z+wall_thickness-distance_sensor_z-4.3,$fn=8);
+    mirror([0,0,1]) {
+        rotate([0,0,180/8])
+        cylinder(d=5.2,h=support_h,$fn=8);
+        buttress_h=support_h*3/4;
+        hull() {
+            translate([0,-wall_thickness/2,buttress_h])
+            cube([wall_thickness,wall_thickness,eps1]);
+            cube([buttress_h,wall_thickness,eps1]);
+        }
+        rotate([0,0,-90])
+        hull() {
+            translate([0,-wall_thickness/2,buttress_h])
+            cube([wall_thickness,wall_thickness,eps1]);
+            cube([buttress_h,wall_thickness,eps1]);
+        }
+    }
 }
 
 module lcd() {
@@ -297,11 +311,13 @@ module camera() {
     }
 }
 
+// hole for DuPont connectors
 module connector_hole() {
+    conn_h = wall_thickness+bottom_z+eps2;
     translate([r1,h2/2,wall_thickness/2])
-    cube([0.2*inch,2.2*inch+clearance_fit,2*wall_thickness],center=true);
+    cube([0.2*inch,2.2*inch+clearance_fit,2*conn_h],center=true);
     translate([w1-r1,h2/2,wall_thickness/2])
-    cube([0.2*inch,2.2*inch+clearance_fit,2*wall_thickness],center=true);
+    cube([0.2*inch,2.2*inch+clearance_fit,2*conn_h],center=true);
 }
 
 // --------------------------------------------------------------------------------
@@ -317,7 +333,7 @@ module top() {
 module top_body() {
     translate([w1/2, h1/2, 0])
     rotate([0,180,0])
-    bottom_box();
+    top_cover();
     top_pcb_support();
     camera_support();
     distance_sensor_support();
@@ -331,11 +347,6 @@ module top_holes() {
     led2_hole();
     button_holes();
     lcd();
-    translate([0,-5.0,-wall_thickness-top_z])
-    {
-        usb();
-        microsd();
-    }
 }
 
 module camera_support() {
@@ -344,13 +355,12 @@ module camera_support() {
     cube([cam_d, cam_d, top_z+pcb_z]);
 }
 
-module top_pcb_support() {
-    mirror([0,0,1])
+module bottom_pcb_support() {
     difference() {
-        linear_extrude(wall_thickness+top_z+pcb_z)
+        linear_extrude(wall_thickness+bottom_z+pcb_z)
         offset(wall_thickness)
         pcb();
-        translate([0,0,wall_thickness+top_z])
+        translate([0,0,wall_thickness+bottom_z])
         linear_extrude(infinity)
         offset(tolerance)
         pcb();
@@ -379,7 +389,7 @@ module bottom() {
 
 module bottom_body() {
     translate([w1/2, h1/2, 0])
-    top_cover();
+    bottom_box();
     bottom_pcb_support();
     bottom_camera_support();
     distance_sensor_body();
@@ -389,9 +399,14 @@ module bottom_body() {
 module bottom_holes() {
     camera_hole();
     camera_cable();
-    if (connector) connector_hole();
     distance_sensor_hole();
     text_label();
+    translate([0,-5.0,wall_thickness+bottom_z+pcb_z])
+    {
+        usb();
+        microsd();
+    }
+    if (connector) connector_hole();
 }
 
 module camera_hole() {
@@ -419,9 +434,9 @@ module bottom_camera_support() {
     }
 }
 
-module bottom_pcb_support() {
-    cyl_z = wall_thickness+bottom_z;
-
+module top_pcb_support() {
+    cyl_z = wall_thickness+top_z;
+    mirror([0,0,1])
     difference() {
         screw_positions()
         cylinder(d=d1,h=cyl_z);
@@ -537,7 +552,7 @@ rotate([90,0,0]) {
 
 //bottom();
 //rotate([0,180,0]) top();
-//printer_ready();
-assembly();
+printer_ready();
+//assembly();
 
 // not truncated

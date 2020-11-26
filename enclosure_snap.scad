@@ -15,13 +15,15 @@ number_of_walls = 3; // [1:5]
 tolerance = 0.2; // [0.1:0.1:0.4]
 
 // Outer x dimension in mm
-x=w1+2*number_of_walls*nozzle_size+2*nozzle_size+5.2;
+x=w1+2*number_of_walls*nozzle_size+nozzle_size;
 
 // Outer y dimension in mm
-y=h1+2*number_of_walls*nozzle_size+2*nozzle_size;
+y=h1+2*number_of_walls*nozzle_size+nozzle_size;
 
 // Outer z dimension in mm
 z=z1+2*number_of_walls*nozzle_size;
+
+echo("Box:",x,y,z);
 
 // Radius for rounded corners in mm
 radius=4; // [1:20]
@@ -37,7 +39,7 @@ top_cover_wall_thickness = hook_thickness + wall_thickness;
 module bottom_box () {
     difference(){
         // Solid box
-        linear_extrude(z-wall_thickness){
+        linear_extrude(z-wall_thickness+eps1){
             minkowski(){
                 square([x-radius*2,y-radius*2], center=true);
                 circle(radius);
