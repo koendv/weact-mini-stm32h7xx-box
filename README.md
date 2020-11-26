@@ -1,5 +1,5 @@
 # Box for WeAct MiniSTM32H7xx
-| ![](MiniSTM32H7xx_box.png) | ![](assembled.png) |
+| ![](open.png) | ![](assembled.png) |
 |--|--|
 | open | assembled|
 

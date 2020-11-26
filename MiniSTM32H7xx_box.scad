@@ -32,8 +32,8 @@ button_y = 62.0;
 button_x1 = 11.9;
 button_x2 = 16.1;
 button_x3 = 20.2;
-button_w = 2.0;
-button_h = 5.0;
+button_w = 3.0;
+button_h = 3.0;
 button_z = top_z-1.3;
 button_l = 13.6;
 
@@ -182,6 +182,10 @@ module distance_sensor_hole() {
             square([eps1,0.3*inch],center=true);
         }
     }
+    
+    // hole for cable from sensor to processor 
+    translate([distance_sensor_x-4,h2,wall_thickness+bottom_z+eps2])
+    cube([0.2*inch,10.0,2*pcb_z],center=true);
 }
 
 module distance_sensor_body() {
@@ -231,10 +235,18 @@ module distance_sensor_support() {
     }
 }
 
-module lcd() {
+module lcd_hole() {
     hole()
     translate([6.5,44,0])
     cube([23.7,12.8,eps1]);
+}
+
+module lcd_body() {
+    translate([6.5,44,0])
+    mirror([0,0,1])
+    linear_extrude(2*wall_thickness)
+    offset(wall_thickness)
+    square([23.7,12.8]);
 }
 
 module button_body() {
@@ -340,13 +352,14 @@ module top_body() {
     led1_body();
     led2_body();
     button_body();
+    lcd_body();
 }
 
 module top_holes() {
     led1_hole();
     led2_hole();
     button_holes();
-    lcd();
+    lcd_hole();
 }
 
 module camera_support() {
@@ -552,7 +565,7 @@ rotate([90,0,0]) {
 
 //bottom();
 //rotate([0,180,0]) top();
-printer_ready();
-//assembly();
+//printer_ready();
+assembly();
 
 // not truncated
