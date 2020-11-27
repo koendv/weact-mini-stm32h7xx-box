@@ -59,19 +59,6 @@ module hole(){
     children();
 }
 
-/* convert 3d object to 3d-printable hole */
-
-module contour() {
-    rotate([-90,0,0])
-    linear_extrude(9)
-    offset(clearance_fit)
-    hull()
-    projection(cut = true)
-    rotate([90,0,0])
-    translate([0,-1,0])
-    children();
-}
-
 /* pcb screw centers */
 module screw_positions() {
     translate([r1, r1, 0])
@@ -291,10 +278,6 @@ module button_holes() {
 
     translate([x1-clearance_fit/2, button_y+button_h/2, -2*wall_thickness])
     cube([x4-x1+clearance_fit, button_l-button_h-clearance_fit, wall_thickness]);
-
-    if (0)
-    hole()
-    import("buttons.stl");
 }
 
 module usb() {
@@ -327,11 +310,7 @@ module usb() {
         offset(-clearance_fit)
         square([usb_c_x2,usb_c_y2],center=true);
     }
-    
-    if (0)
-    contour()
-    translate([0,0,-0.1])
-    import("usb.stl");
+
 }
 
 module microsd() {
@@ -619,7 +598,7 @@ rotate([90,0,0]) {
 
 //bottom();
 //rotate([0,180,0]) top();
-//printer_ready();
-assembly();
+printer_ready();
+//assembly();
 
 // not truncated
