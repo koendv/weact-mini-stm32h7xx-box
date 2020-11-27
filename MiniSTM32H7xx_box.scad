@@ -593,12 +593,17 @@ rotate([90,0,0]) {
         translate([distance_sensor_x,distance_sensor_y,distance_sensor_z])
         rotate([180,0,180])
         distance_sensor();
+        
+        translate([usb_x, -1.0, wall_thickness+top_z+pcb_z+usb_y])
+        rotate([0,0,90])
+        translate([0, 2.9,-11.277547])
+        import("usb-c.stl");
     }
 }
 
 //bottom();
 //rotate([0,180,0]) top();
-printer_ready();
-//assembly();
+//printer_ready();
+assembly();
 
 // not truncated
