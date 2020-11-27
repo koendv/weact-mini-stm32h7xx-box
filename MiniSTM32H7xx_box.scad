@@ -395,6 +395,7 @@ module top_holes() {
     led2_hole();
     button_holes();
     lcd_hole();
+    text_label();
 }
 
 module camera_support() {
@@ -449,7 +450,6 @@ module bottom_holes() {
     camera_hole();
     camera_cable();
     distance_sensor_hole();
-    text_label();
     translate([0,0,wall_thickness+bottom_z+pcb_z])
     {
         usb();
@@ -499,9 +499,7 @@ module top_pcb_support() {
 }
 
 module text_label() {
-    translate([w1/2,h1/2,0])
-    rotate([0,0,180])
-    mirror([0,1,0])
+    translate([w1/2,h1/4,0])
     small_text("Mini H7");
 }
 // --------------------------------------------------------------------------------
