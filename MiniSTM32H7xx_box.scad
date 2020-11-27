@@ -356,11 +356,14 @@ module connector_hole() {
 
 module connector_body() {
     linear_extrude(2*wall_thickness)
-    offset(wall_thickness+nozzle_size) {
-        translate([r1,h2/2,wall_thickness/2])
-        square([0.2*inch,2.2*inch],center=true);
-        translate([w1-r1,h2/2,wall_thickness/2])
-        square([0.2*inch,2.2*inch],center=true);
+    intersection() {
+        offset(wall_thickness+nozzle_size) {
+            translate([r1,h2/2,wall_thickness/2])
+            square([0.2*inch,2.2*inch],center=true);
+            translate([w1-r1,h2/2,wall_thickness/2])
+            square([0.2*inch,2.2*inch],center=true);
+        };
+        pcb();
     }
 }
 
