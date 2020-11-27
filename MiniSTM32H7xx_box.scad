@@ -43,6 +43,9 @@ distance_sensor_x = 32.0;
 distance_sensor_y = 79.0;
 distance_sensor_z = 1.2-eps1;
 
+usb_x = 28.22;
+usb_y = 1.7;
+
 clearance_fit=0.4;
 
 include <enclosure_snap.scad>
@@ -295,15 +298,51 @@ module button_holes() {
 }
 
 module usb() {
+    
+    usb_c_x1 = 12.35;
+    usb_c_y1 = 6.5;
+    //usb_c_y = 0.5; //XXX
+    usb_c_z1 = 10.0;
+    
+    usb_c_x2 = 8.25;
+    usb_c_y2 = 2.4;
+    usb_c_z2 = 9.5;
+    usb_c_d2 = usb_c_x2 - usb_c_y2;
+
+    if (1)
+    translate([usb_x,0,usb_y])
+    rotate([90,0,0]) {
+        // overmold
+        if (0)
+        translate([0,0,wall_thickness-nozzle_size])
+        linear_extrude(usb_c_z1)
+        offset(delta=1.2,chamfer=true)
+        offset(-1.2)
+        square([usb_c_x1,usb_c_y1],center=true);
+        
+        // plug
+        translate([0,0,-usb_c_z2/2])
+        linear_extrude(usb_c_z2)
+        offset(delta=2*clearance_fit,chamfer=true)
+        offset(-clearance_fit)
+        square([usb_c_x2,usb_c_y2],center=true);
+    }
+    
+    if (0)
     contour()
     translate([0,0,-0.1])
     import("usb.stl");
 }
 
 module microsd() {
-    contour()
-    translate([7.2,0,0])
-    cube([14.1,15.2,1.9]);
+    // microsd card standard dimensions: 11x15x1mm
+    h=15;
+    translate([7.6,0,0])
+    rotate([90,0,0])
+    translate([0,clearance_fit,-h/2])
+    linear_extrude(h)
+    offset(clearance_fit)
+    square([11,1]);
 }
 
 module pcb_3d() {
@@ -429,7 +468,7 @@ module bottom_holes() {
     camera_cable();
     distance_sensor_hole();
     text_label();
-    translate([0,-5.0,wall_thickness+bottom_z+pcb_z])
+    translate([0,0,wall_thickness+bottom_z+pcb_z])
     {
         usb();
         microsd();
