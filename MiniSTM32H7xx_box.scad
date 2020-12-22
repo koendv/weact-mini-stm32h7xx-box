@@ -11,7 +11,7 @@ infinity=100;
 inch=25.4;
 
 top_z=6.0;    // top components
-bottom_z=6.2; // bottom components
+bottom_z=9.0; // bottom components
 pcb_z=1.6;    // pcb
 
 w1=40.64;
