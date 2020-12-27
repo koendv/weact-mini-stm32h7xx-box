@@ -3,7 +3,8 @@
  * and gy-530 vl53l0x laser ranging sensor.
  */
 
-connector = false; //hole for dupont connectors
+connector = false; // hole for dupont connectors
+laser_distance_sensor = true; // hole for gy-530 vl53l0x laser ranging sensor
 
 eps1=0.001;
 eps2=2*eps1;
@@ -44,7 +45,7 @@ distance_sensor_y = 79.0;
 distance_sensor_z = 1.2-eps1;
 
 usb_x = 28.22;
-usb_y = 1.7;
+usb_y = 4.8;
 
 clearance_fit=0.4;
 
@@ -441,7 +442,8 @@ module bottom_body() {
     bottom_box();
     bottom_pcb_support();
     bottom_camera_support();
-    distance_sensor_body();
+    if (laser_distance_sensor)
+        distance_sensor_body();
     bidi();
     if (connector) connector_body();
 }
@@ -449,7 +451,8 @@ module bottom_body() {
 module bottom_holes() {
     camera_hole();
     camera_cable();
-    distance_sensor_hole();
+    if (laser_distance_sensor)
+        distance_sensor_hole();
     translate([0,0,wall_thickness+bottom_z+pcb_z])
     {
         usb();
@@ -589,7 +592,7 @@ rotate([90,0,0]) {
             }
         }
 
-        if (1)
+        if (laser_distance_sensor)
         color("Purple")
         translate([distance_sensor_x,distance_sensor_y,distance_sensor_z])
         rotate([180,0,180])
