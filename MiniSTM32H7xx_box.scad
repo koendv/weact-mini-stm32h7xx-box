@@ -5,6 +5,7 @@
 
 connector = false; // hole for dupont connectors
 laser_distance_sensor = true; // hole for gy-530 vl53l0x laser ranging sensor
+cs_mount = true; // hole for cs-mount
 
 eps1=0.001;
 eps2=2*eps1;
@@ -145,8 +146,8 @@ module distance_sensor_hole() {
             }
 
         // small cap
-        translate([0.9,3.3,0.6])
-        linear_extrude(0.6+eps1)
+        #translate([0.9,3.3,0.2])
+        linear_extrude(0.9+eps1)
         offset(nozzle_size)
         square([0.6,1.0],center=true);
 
