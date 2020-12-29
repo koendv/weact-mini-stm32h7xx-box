@@ -3,9 +3,8 @@
  * and gy-530 vl53l0x laser ranging sensor.
  */
 
-connector = false; // hole for dupont connectors
+connector = true; // hole for dupont connectors
 laser_distance_sensor = true; // hole for gy-530 vl53l0x laser ranging sensor
-cs_mount = true; // hole for cs-mount
 
 eps1=0.001;
 eps2=2*eps1;
