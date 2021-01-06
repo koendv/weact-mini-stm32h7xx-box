@@ -145,7 +145,7 @@ module distance_sensor_hole() {
             }
 
         // small cap
-        #translate([0.9,3.3,0.2])
+        translate([0.9,3.3,0.2])
         linear_extrude(0.9+eps1)
         offset(nozzle_size)
         square([0.6,1.0],center=true);
@@ -282,34 +282,22 @@ module button_holes() {
 }
 
 module usb() {
-    
-    usb_c_x1 = 12.35;
-    usb_c_y1 = 6.5;
-    //usb_c_y = 0.5; //XXX
-    usb_c_z1 = 10.0;
-    
-    usb_c_x2 = 8.25;
-    usb_c_y2 = 2.4;
-    usb_c_z2 = 9.5;
-    usb_c_d2 = usb_c_x2 - usb_c_y2;
 
+    usb_c_x2 = 9.0;
+    usb_c_y2 = 3.2;
+    usb_c_z2 = 9.5;
+    
     if (1)
-    translate([usb_x,0,usb_y])
-    rotate([90,0,0]) {
-        // overmold
-        if (0)
-        translate([0,0,wall_thickness-nozzle_size])
-        linear_extrude(usb_c_z1)
-        offset(delta=1.2,chamfer=true)
-        offset(-1.2)
-        square([usb_c_x1,usb_c_y1],center=true);
-        
+    translate([usb_x,0,0])
+    rotate([90,0,0]) {    
         // plug
         translate([0,0,-usb_c_z2/2])
         linear_extrude(usb_c_z2)
         offset(delta=2*clearance_fit,chamfer=true)
         offset(-clearance_fit)
-        square([usb_c_x2,usb_c_y2],center=true);
+        mirror([0,1])
+        translate([-usb_c_x2/2,-usb_c_y2])
+        square([usb_c_x2,usb_c_y2]);
     }
 
 }
@@ -598,6 +586,7 @@ rotate([90,0,0]) {
         rotate([180,0,180])
         distance_sensor();
         
+        if (1)
         translate([usb_x, -1.0, wall_thickness+top_z+pcb_z+usb_y])
         rotate([0,0,90])
         translate([0, 2.9,-11.277547])
