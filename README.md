@@ -7,7 +7,16 @@
 
 This is a box for the [WeAct-TC MiniSTM32H7xx](MiniSTM32H7xx.jpg) board. The MiniSTM32H7xx runs micropython and openmv (Open Machine Vision). The board includes a camera and lcd screen.
 
-Additionally, there is room to mount a [GY-530](GY-530.jpg) board, a VL53L0X time-of-flight laser range finder.
+Additionally, there is room to mount a [GY-530](GY-530.jpg) board, a VL53L0X time-of-flight laser range finder. This distance sensor can be used to check whether there is something in front of the lens. 
+
+Connections:
+
+|VL53L0X|MiniSTM32H7xx|
+|---|---|
+|Vin|3V3|
+|GND|GND|
+|SCL|D12|
+|SDA|D13|
 
 ## Download
 
