@@ -151,26 +151,15 @@ module distance_sensor_hole() {
         square([0.6,1.0],center=true);
 
         // pins
-        translate([-3.1,-0.6,1.1+eps1])
-        hull() {
-            linear_extrude(eps1)
-            offset(nozzle_size)
-            square([1.2,0.15*inch],center=true);
-            translate([0,0,-1.2])
-            linear_extrude(eps1)
-            offset(nozzle_size)
-            square([eps1,0.1*inch],center=true);
-        }
-
         translate([7.3,1.8,1.1+eps1])
         hull() {
             linear_extrude(eps1)
             offset(nozzle_size)
-            square([1.2,0.35*inch],center=true);
+            square([2.0,0.4*inch],center=true);
             translate([0,0,-1.2])
             linear_extrude(eps1)
             offset(nozzle_size)
-            square([eps1,0.3*inch],center=true);
+            square([eps1,0.35*inch],center=true);
         }
     }
 }
@@ -405,6 +394,11 @@ module bottom_pcb_support() {
     }
 }
 
+module bottom_pry_open() {
+    translate([w1/2,h1+wall_thickness,z1+wall_thickness])
+    cube([8.0,1.2,1.6],center=true);
+}
+
 module pcb() {
     hull()
     screw_positions()
@@ -442,6 +436,7 @@ module bottom_holes() {
         microsd();
     }
     if (connector) connector_hole();
+    bottom_pry_open();
 }
 
 module camera_hole() {
