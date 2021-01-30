@@ -399,8 +399,8 @@ module bottom_pcb_support() {
 }
 
 module bottom_pry_open() {
-    translate([w1/2,h1+wall_thickness,z1+wall_thickness])
-    cube([8.0,1.2,1.6],center=true);
+    translate([w2/2,h1+wall_thickness,z1+wall_thickness])
+    cube([12.0,1.2,1.6],center=true);
 }
 
 module pcb() {
