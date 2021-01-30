@@ -306,7 +306,7 @@ module pcb_3d() {
 }
 
 module camera() {
-    translate([cam_x,cam_y,0])
+    translate([cam_x,cam_y,-cam_z_offset])
     rotate([0,180,0]) {
         translate([-4,-4,0])
         cube([8.0,8.0,4.6]);
