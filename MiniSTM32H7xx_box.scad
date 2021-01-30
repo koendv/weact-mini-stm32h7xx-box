@@ -473,7 +473,7 @@ module top_pcb_support() {
     difference() {
         screw_positions()
         cylinder(d=d1,h=cyl_z);
-        translate([w1/2, h1/2, 0]) {
+        translate([w2/2, h1/2, 0]) {
             right_groove();
             rotate([180,180,0]) right_groove();
             front_groove();
