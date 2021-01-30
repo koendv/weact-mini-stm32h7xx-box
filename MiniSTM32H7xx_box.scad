@@ -15,7 +15,7 @@ top_z=6.0;    // top components
 bottom_z=9.0; // bottom components
 pcb_z=1.6;    // pcb
 
-w1=45.0;
+w1=46.0;
 h1=85.0;
 w2=40.64;
 h2=66.88;
@@ -27,6 +27,7 @@ r1=d1/2; // distance screw center to pcb edge
 cam_x=14.5;
 cam_y=79.0;
 cam_d=8.5;
+cam_z_offset=1.2; // distance between camera flex cable and pcb
 
 /* buttons */
 button_y = 62.0;
@@ -374,8 +375,11 @@ module top_holes() {
 
 module camera_support() {
     translate([cam_x,cam_y,0])
-    translate([-cam_d/2,-cam_d/2,-(top_z+pcb_z+wall_thickness)])
-    cube([cam_d, cam_d, top_z+pcb_z]);
+    translate([-cam_d/2,-cam_d/2,-(cam_z_offset+top_z+pcb_z+wall_thickness)])
+    linear_extrude(top_z+pcb_z)
+    offset(wall_thickness)
+    offset(-wall_thickness-tolerance)
+    square(cam_d);
 }
 
 module bottom_pcb_support() {
@@ -446,15 +450,14 @@ module camera_hole() {
 }
 
 module camera_cable() {
-    th=0.4;
     cable_y=cam_y-h2;
-    translate([cam_x-cam_d/2,cam_y-cam_d/2-cable_y,wall_thickness+bottom_z-th])
-    cube([cam_d, cable_y, pcb_z+th+eps2]);
+    translate([cam_x-cam_d/2,cam_y-cam_d/2-cable_y,wall_thickness+bottom_z-cam_z_offset])
+    cube([cam_d, cable_y, pcb_z+cam_z_offset+eps2]);
 }
 
 module bottom_camera_support() {
     translate([cam_x, cam_y, wall_thickness])
-    linear_extrude(bottom_z-nozzle_size)
+    linear_extrude(bottom_z-cam_z_offset-nozzle_size)
     difference() {
         offset(wall_thickness)
         offset(tolerance)
@@ -533,7 +536,7 @@ rotate([90,0,0]) {
 
 //bottom();
 //rotate([0,180,0]) top();
-printer_ready();
-//assembly();
+//printer_ready();
+assembly();
 
 // not truncated
