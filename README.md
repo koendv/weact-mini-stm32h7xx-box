@@ -3,7 +3,7 @@
 |--|--|
 | open | assembled|
 
- 
+| [![before](pics/minih7_img01_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img01_big.jpg)| [![after](pics/minih7_img02_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img02_big.jpg)| [![back](pics/minih7_img03_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img03_big.jpg)| [![front](pics/minih7_img04_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img04_big.jpg)|
 
 This is a box for the [WeAct-TC MiniSTM32H7xx](MiniSTM32H7xx.jpg) board. The MiniSTM32H7xx runs micropython and openmv (Open Machine Vision). The board includes a camera and lcd screen.
 
