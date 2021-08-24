@@ -4,13 +4,14 @@
 | open | assembled|
 
 | [![before](pics/minih7_img01_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img01_big.jpg)| [![after](pics/minih7_img02_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img02_big.jpg)|
+|--|--|
 | [![back](pics/minih7_img03_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img03_big.jpg)| [![front](pics/minih7_img04_small.jpg)](https://raw.githubusercontent.com/koendv/weact-mini-stm32h7xx-box/master/pics/minih7_img04_big.jpg)|
 
 This is a box for the [WeAct-TC MiniSTM32H7xx](MiniSTM32H7xx.jpg) board. The MiniSTM32H7xx runs micropython and openmv (Open Machine Vision). The board includes a camera and lcd screen.
 
 Additionally, there is room to mount a [GY-530](GY-530.jpg) board, a VL53L0X time-of-flight laser range finder. This distance sensor can be used to check whether there is something in front of the lens. 
 
-Connections for the laser range finder:
+Connections for the optional VL53L0X laser range finder:
 
 |VL53L0X|MiniSTM32H7xx|
 |---|---|
@@ -21,7 +22,7 @@ Connections for the laser range finder:
 
 ## Download
 
-[STL files](https://github.com/koendv/weact-mini-stm32h7xx-box/releases) for 3D printer. The box consists of two parts, a top and a bottom. There are two versions of the bottom, one with DuPont connectors exposed and one with DuPont connectors covered.
+[STL files](https://github.com/koendv/weact-mini-stm32h7xx-box/releases) for 3D printer. The box consists of two parts, a top and a bottom.
 
 ## Hardware
 
